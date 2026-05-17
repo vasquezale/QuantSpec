@@ -1,0 +1,10 @@
+{
+  "text": "## Entry Conditions\n\nOpen one synthetic breakout trade when the fixture signal is active during the demo intraday window.\n\n## Exit Conditions\n\nClose the position inside the same session using the fixture close event. No overnight holding is allowed.\n\n## Risk Parameters\n\nUse one trade per day, require a stop loss, and apply the risk limits declared in the brief.\n\n## Validation Requirements\n\nEvaluate the trade fixture separately for in-sample and out-of-sample windows. Persist results before quality gates are evaluated.\n\n## Assumptions\n\nThe fixture data is synthetic and exists only to exercise the validation pipeline.\n\n## Known Risks\n\nThe fixture can fail out-of-sample gates. A failed gate is a valid validation outcome, not a system error.\n",
+  "model": "fixture-llm",
+  "usage": {
+    "input_tokens": 0,
+    "output_tokens": 0
+  },
+  "latency_ms": 0
+}
+
