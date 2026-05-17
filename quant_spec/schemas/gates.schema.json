@@ -1,0 +1,124 @@
+{
+  "$defs": {
+    "GateCheck": {
+      "additionalProperties": false,
+      "description": "Single quality gate result.",
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "metric": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Metric"
+        },
+        "op": {
+          "$ref": "#/$defs/GateOperator"
+        },
+        "status": {
+          "$ref": "#/$defs/GateStatus"
+        },
+        "threshold": {
+          "title": "Threshold",
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "metric",
+        "threshold",
+        "op",
+        "status"
+      ],
+      "title": "GateCheck",
+      "type": "object"
+    },
+    "GateOperator": {
+      "description": "Supported gate comparisons.",
+      "enum": [
+        ">=",
+        "<="
+      ],
+      "title": "GateOperator",
+      "type": "string"
+    },
+    "GateStatus": {
+      "description": "Per-gate status.",
+      "enum": [
+        "PASS",
+        "FAIL",
+        "SKIPPED"
+      ],
+      "title": "GateStatus",
+      "type": "string"
+    },
+    "GateSummary": {
+      "description": "Overall gate report status.",
+      "enum": [
+        "PASS",
+        "FAIL"
+      ],
+      "title": "GateSummary",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Quality gate report artifact contract.",
+  "properties": {
+    "first_failed": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "First Failed"
+    },
+    "gates": {
+      "items": {
+        "$ref": "#/$defs/GateCheck"
+      },
+      "minItems": 1,
+      "title": "Gates",
+      "type": "array"
+    },
+    "gates_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Gates Hash",
+      "type": "string"
+    },
+    "hypothesis_id": {
+      "pattern": "^HYP-\\d{3}-[a-z0-9-]+$",
+      "title": "Hypothesis Id",
+      "type": "string"
+    },
+    "result_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Result Hash",
+      "type": "string"
+    },
+    "summary": {
+      "$ref": "#/$defs/GateSummary"
+    }
+  },
+  "required": [
+    "hypothesis_id",
+    "result_hash",
+    "gates_hash",
+    "summary",
+    "gates"
+  ],
+  "title": "GateReport",
+  "type": "object"
+}

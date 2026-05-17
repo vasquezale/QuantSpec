@@ -1,0 +1,208 @@
+{
+  "$defs": {
+    "AssetClass": {
+      "description": "Supported public demo asset classes.",
+      "enum": [
+        "demo",
+        "equity",
+        "futures",
+        "forex",
+        "crypto"
+      ],
+      "title": "AssetClass",
+      "type": "string"
+    },
+    "BriefData": {
+      "additionalProperties": false,
+      "description": "Data reference for a brief.",
+      "properties": {
+        "path": {
+          "minLength": 1,
+          "title": "Path",
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/DataSource"
+        }
+      },
+      "required": [
+        "source",
+        "path"
+      ],
+      "title": "BriefData",
+      "type": "object"
+    },
+    "DataSource": {
+      "description": "Supported data source labels.",
+      "enum": [
+        "fixture",
+        "public"
+      ],
+      "title": "DataSource",
+      "type": "string"
+    },
+    "Market": {
+      "additionalProperties": false,
+      "description": "Market metadata for a brief.",
+      "properties": {
+        "asset_class": {
+          "$ref": "#/$defs/AssetClass"
+        },
+        "pip_size": {
+          "exclusiveMinimum": 0,
+          "title": "Pip Size",
+          "type": "number"
+        },
+        "symbol": {
+          "minLength": 1,
+          "title": "Symbol",
+          "type": "string"
+        }
+      },
+      "required": [
+        "symbol",
+        "asset_class",
+        "pip_size"
+      ],
+      "title": "Market",
+      "type": "object"
+    },
+    "PeriodWindow": {
+      "additionalProperties": false,
+      "description": "Inclusive date window.",
+      "properties": {
+        "end": {
+          "format": "date",
+          "title": "End",
+          "type": "string"
+        },
+        "start": {
+          "format": "date",
+          "title": "Start",
+          "type": "string"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "title": "PeriodWindow",
+      "type": "object"
+    },
+    "Periods": {
+      "additionalProperties": false,
+      "description": "In-sample and out-of-sample validation windows.",
+      "properties": {
+        "insample": {
+          "$ref": "#/$defs/PeriodWindow"
+        },
+        "outsample": {
+          "$ref": "#/$defs/PeriodWindow"
+        }
+      },
+      "required": [
+        "insample",
+        "outsample"
+      ],
+      "title": "Periods",
+      "type": "object"
+    },
+    "RiskConstraints": {
+      "additionalProperties": false,
+      "description": "Risk limits applied before metric calculation.",
+      "properties": {
+        "intraday_only": {
+          "title": "Intraday Only",
+          "type": "boolean"
+        },
+        "max_daily_risk_pct": {
+          "exclusiveMinimum": 0,
+          "title": "Max Daily Risk Pct",
+          "type": "number"
+        },
+        "max_trades_per_day": {
+          "minimum": 1,
+          "title": "Max Trades Per Day",
+          "type": "integer"
+        },
+        "must_have_stop_loss": {
+          "title": "Must Have Stop Loss",
+          "type": "boolean"
+        },
+        "risk_per_trade_pct": {
+          "exclusiveMinimum": 0,
+          "title": "Risk Per Trade Pct",
+          "type": "number"
+        }
+      },
+      "required": [
+        "max_daily_risk_pct",
+        "risk_per_trade_pct",
+        "max_trades_per_day",
+        "must_have_stop_loss",
+        "intraday_only"
+      ],
+      "title": "RiskConstraints",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Machine-readable hypothesis brief.",
+  "properties": {
+    "author": {
+      "minLength": 1,
+      "title": "Author",
+      "type": "string"
+    },
+    "central_hypothesis": {
+      "minLength": 1,
+      "title": "Central Hypothesis",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "data": {
+      "$ref": "#/$defs/BriefData"
+    },
+    "id": {
+      "pattern": "^HYP-\\d{3}-[a-z0-9-]+$",
+      "title": "Id",
+      "type": "string"
+    },
+    "market": {
+      "$ref": "#/$defs/Market"
+    },
+    "notes": {
+      "default": "",
+      "title": "Notes",
+      "type": "string"
+    },
+    "periods": {
+      "$ref": "#/$defs/Periods"
+    },
+    "risk_constraints": {
+      "$ref": "#/$defs/RiskConstraints"
+    },
+    "timeframe": {
+      "minLength": 1,
+      "title": "Timeframe",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "created_at",
+    "author",
+    "market",
+    "timeframe",
+    "central_hypothesis",
+    "risk_constraints",
+    "periods",
+    "data"
+  ],
+  "title": "HypothesisBrief",
+  "type": "object"
+}

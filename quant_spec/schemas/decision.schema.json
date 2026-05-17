@@ -1,0 +1,69 @@
+{
+  "$defs": {
+    "DecisionStatus": {
+      "description": "Final hypothesis decision status.",
+      "enum": [
+        "CANDIDATE_FOR_REVIEW",
+        "CLOSED_BY_GATE"
+      ],
+      "title": "DecisionStatus",
+      "type": "string"
+    },
+    "GateSummary": {
+      "description": "Overall gate report status.",
+      "enum": [
+        "PASS",
+        "FAIL"
+      ],
+      "title": "GateSummary",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Machine-readable decision metadata.",
+  "properties": {
+    "decided_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Decided At"
+    },
+    "decided_by": {
+      "minLength": 1,
+      "title": "Decided By",
+      "type": "string"
+    },
+    "gates_summary": {
+      "$ref": "#/$defs/GateSummary"
+    },
+    "hypothesis_id": {
+      "pattern": "^HYP-\\d{3}-[a-z0-9-]+$",
+      "title": "Hypothesis Id",
+      "type": "string"
+    },
+    "report_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Report Hash",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/DecisionStatus"
+    }
+  },
+  "required": [
+    "hypothesis_id",
+    "status",
+    "decided_by",
+    "gates_summary",
+    "report_hash"
+  ],
+  "title": "DecisionRecord",
+  "type": "object"
+}

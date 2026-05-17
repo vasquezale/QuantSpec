@@ -1,0 +1,211 @@
+{
+  "$defs": {
+    "PeriodMetrics": {
+      "additionalProperties": false,
+      "description": "Required deterministic metrics for a period.",
+      "properties": {
+        "avg_trade_r": {
+          "title": "Avg Trade R",
+          "type": "number"
+        },
+        "max_drawdown": {
+          "minimum": 0,
+          "title": "Max Drawdown",
+          "type": "number"
+        },
+        "n_trades": {
+          "minimum": 0,
+          "title": "N Trades",
+          "type": "integer"
+        },
+        "profit_factor": {
+          "minimum": 0,
+          "title": "Profit Factor",
+          "type": "number"
+        },
+        "sharpe": {
+          "title": "Sharpe",
+          "type": "number"
+        },
+        "win_rate": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Win Rate",
+          "type": "number"
+        }
+      },
+      "required": [
+        "sharpe",
+        "win_rate",
+        "max_drawdown",
+        "profit_factor",
+        "n_trades",
+        "avg_trade_r"
+      ],
+      "title": "PeriodMetrics",
+      "type": "object"
+    },
+    "PeriodResult": {
+      "additionalProperties": false,
+      "description": "Persisted validation period metadata.",
+      "properties": {
+        "end": {
+          "format": "date",
+          "title": "End",
+          "type": "string"
+        },
+        "n_trades": {
+          "minimum": 0,
+          "title": "N Trades",
+          "type": "integer"
+        },
+        "start": {
+          "format": "date",
+          "title": "Start",
+          "type": "string"
+        }
+      },
+      "required": [
+        "start",
+        "end",
+        "n_trades"
+      ],
+      "title": "PeriodResult",
+      "type": "object"
+    },
+    "ResultMetrics": {
+      "additionalProperties": false,
+      "description": "In-sample and out-of-sample metrics.",
+      "properties": {
+        "insample": {
+          "$ref": "#/$defs/PeriodMetrics"
+        },
+        "outsample": {
+          "$ref": "#/$defs/PeriodMetrics"
+        }
+      },
+      "required": [
+        "insample",
+        "outsample"
+      ],
+      "title": "ResultMetrics",
+      "type": "object"
+    },
+    "ResultPeriods": {
+      "additionalProperties": false,
+      "description": "In-sample and out-of-sample result periods.",
+      "properties": {
+        "insample": {
+          "$ref": "#/$defs/PeriodResult"
+        },
+        "outsample": {
+          "$ref": "#/$defs/PeriodResult"
+        }
+      },
+      "required": [
+        "insample",
+        "outsample"
+      ],
+      "title": "ResultPeriods",
+      "type": "object"
+    },
+    "RiskConstraintViolations": {
+      "additionalProperties": false,
+      "description": "Trades discarded while enforcing risk constraints.",
+      "properties": {
+        "discarded_trades": {
+          "minimum": 0,
+          "title": "Discarded Trades",
+          "type": "integer"
+        },
+        "reasons": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Reasons",
+          "type": "object"
+        }
+      },
+      "required": [
+        "discarded_trades"
+      ],
+      "title": "RiskConstraintViolations",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Deterministic result artifact contract.",
+  "properties": {
+    "brief_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Brief Hash",
+      "type": "string"
+    },
+    "data_source": {
+      "minLength": 1,
+      "title": "Data Source",
+      "type": "string"
+    },
+    "engine": {
+      "minLength": 1,
+      "title": "Engine",
+      "type": "string"
+    },
+    "engine_version": {
+      "minLength": 1,
+      "title": "Engine Version",
+      "type": "string"
+    },
+    "executed_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Executed At"
+    },
+    "hypothesis_id": {
+      "pattern": "^HYP-\\d{3}-[a-z0-9-]+$",
+      "title": "Hypothesis Id",
+      "type": "string"
+    },
+    "metrics": {
+      "$ref": "#/$defs/ResultMetrics"
+    },
+    "periods": {
+      "$ref": "#/$defs/ResultPeriods"
+    },
+    "result_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Result Hash",
+      "type": "string"
+    },
+    "risk_constraint_violations": {
+      "$ref": "#/$defs/RiskConstraintViolations"
+    },
+    "spec_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Spec Hash",
+      "type": "string"
+    }
+  },
+  "required": [
+    "hypothesis_id",
+    "engine",
+    "engine_version",
+    "brief_hash",
+    "spec_hash",
+    "data_source",
+    "periods",
+    "metrics",
+    "risk_constraint_violations",
+    "result_hash"
+  ],
+  "title": "BacktestResult",
+  "type": "object"
+}
