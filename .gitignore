@@ -38,6 +38,6 @@ env/
 .vscode/
 .idea/
 
-# Local agent instructions
+# Local workspace notes
 AGENTS.md
 CLAUDE.md

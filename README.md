@@ -6,7 +6,7 @@ It is not a trading bot. It does not execute live trades or broker orders. The p
 
 ## Setup
 
-QuantSpec is in early active development. The current release provides project packaging, development checks, and a minimal command-line entry point.
+QuantSpec is in early active development. The current release provides project packaging, development checks, artifact contracts, deterministic validation metrics, fixed quality gates, synthetic demo fixtures, and a minimal command-line entry point.
 
 Requirements:
 
@@ -85,6 +85,8 @@ flowchart LR
 
 ## Current Status
 
-The current release provides package metadata, development tooling, an environment template, git hygiene, and smoke tests. Implementation is still pending for the executable MVP: models/schemas, validation metrics, gates, runner, fixture demos, and live Claude integration.
+The current release includes package metadata, development tooling, an environment template, git hygiene, smoke tests, Pydantic artifact contracts, JSON Schemas, canonical JSON hashing, deterministic fixture metrics, fixed quality gates, and synthetic PASS/FAIL demo fixtures.
+
+Implementation is still pending for the executable MVP runner, functional pipeline CLI commands, fixture LLM responses, `python_demo_engine` orchestration, report generation, decision document generation, and live Claude integration.
 
 The intended public MVP will be runnable without an API key through fixture mode. Live Claude mode is planned as an opt-in integration.

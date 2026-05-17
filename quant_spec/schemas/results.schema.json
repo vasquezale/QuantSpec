@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
     "PeriodMetrics": {
       "additionalProperties": false,
@@ -19,9 +20,17 @@
           "type": "integer"
         },
         "profit_factor": {
-          "minimum": 0,
-          "title": "Profit Factor",
-          "type": "number"
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Profit Factor"
         },
         "sharpe": {
           "title": "Sharpe",

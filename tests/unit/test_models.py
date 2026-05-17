@@ -1,4 +1,6 @@
+import json
 from datetime import UTC, date, datetime
+from pathlib import Path
 
 import pytest
 from pydantic import ValidationError
@@ -178,3 +180,116 @@ def test_results_gates_and_decision_models_validate() -> None:
 
     assert gates.summary == GateSummary.PASS
     assert decision.status == DecisionStatus.CANDIDATE_FOR_REVIEW
+
+
+def test_gate_report_rejects_inconsistent_pass_summary() -> None:
+    with pytest.raises(ValidationError, match="all gates to pass"):
+        GateReport.model_validate(
+            {
+                "hypothesis_id": "HYP-002-intraday-pass-demo",
+                "result_hash": VALID_HASH,
+                "gates_hash": VALID_HASH,
+                "summary": "PASS",
+                "gates": [
+                    {
+                        "id": "G1_sharpe_is",
+                        "metric": -0.1,
+                        "threshold": 0.0,
+                        "op": ">=",
+                        "status": "FAIL",
+                    }
+                ],
+            }
+        )
+
+
+def test_gate_report_rejects_inconsistent_first_failed() -> None:
+    with pytest.raises(ValidationError, match="first_failed"):
+        GateReport.model_validate(
+            {
+                "hypothesis_id": "HYP-002-intraday-pass-demo",
+                "result_hash": VALID_HASH,
+                "gates_hash": VALID_HASH,
+                "summary": "FAIL",
+                "first_failed": "G2_sharpe_oos",
+                "gates": [
+                    {
+                        "id": "G1_sharpe_is",
+                        "metric": -0.1,
+                        "threshold": 0.0,
+                        "op": ">=",
+                        "status": "FAIL",
+                    }
+                ],
+            }
+        )
+
+
+def test_gate_report_rejects_unskipped_gate_after_first_failure() -> None:
+    with pytest.raises(ValidationError, match="must be skipped"):
+        GateReport.model_validate(
+            {
+                "hypothesis_id": "HYP-002-intraday-pass-demo",
+                "result_hash": VALID_HASH,
+                "gates_hash": VALID_HASH,
+                "summary": "FAIL",
+                "first_failed": "G1_sharpe_is",
+                "gates": [
+                    {
+                        "id": "G1_sharpe_is",
+                        "metric": -0.1,
+                        "threshold": 0.0,
+                        "op": ">=",
+                        "status": "FAIL",
+                    },
+                    {
+                        "id": "G2_sharpe_oos",
+                        "metric": 1.6,
+                        "threshold": 1.5,
+                        "op": ">=",
+                        "status": "PASS",
+                    },
+                ],
+            }
+        )
+
+
+def test_decision_record_rejects_inconsistent_gate_summary() -> None:
+    with pytest.raises(ValidationError, match="requires PASS"):
+        DecisionRecord.model_validate(
+            {
+                "hypothesis_id": "HYP-002-intraday-pass-demo",
+                "status": "CANDIDATE_FOR_REVIEW",
+                "decided_by": "operator",
+                "gates_summary": "FAIL",
+                "report_hash": VALID_HASH,
+            }
+        )
+
+    with pytest.raises(ValidationError, match="requires FAIL"):
+        DecisionRecord.model_validate(
+            {
+                "hypothesis_id": "HYP-001-intraday-fail-demo",
+                "status": "CLOSED_BY_GATE",
+                "decided_by": "operator",
+                "gates_summary": "PASS",
+                "report_hash": VALID_HASH,
+            }
+        )
+
+
+def test_json_schemas_declare_draft_2020_12_and_nullable_profit_factor() -> None:
+    schemas_dir = Path("quant_spec/schemas")
+
+    for schema_path in schemas_dir.glob("*.schema.json"):
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+        assert schema["$schema"] == "https://json-schema.org/draft/2020-12/schema"
+
+    results_schema = json.loads(
+        (schemas_dir / "results.schema.json").read_text(encoding="utf-8")
+    )
+    profit_factor_schema = results_schema["$defs"]["PeriodMetrics"]["properties"][
+        "profit_factor"
+    ]
+
+    assert {"type": "null"} in profit_factor_schema["anyOf"]

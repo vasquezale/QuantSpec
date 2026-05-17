@@ -18,7 +18,6 @@ RUNTIME_HASH_EXCLUDE_FIELDS = frozenset(
         "latency_ms",
         "log_file",
         "output_path",
-        "path",
         "gates_hash",
         "report_hash",
         "result_hash",

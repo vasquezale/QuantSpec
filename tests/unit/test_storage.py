@@ -44,6 +44,36 @@ def test_artifact_hash_excludes_runtime_fields() -> None:
     assert storage.hash_artifact(first) == storage.hash_artifact(second)
 
 
+def test_artifact_hash_changes_when_stable_data_path_changes() -> None:
+    storage = ArtifactStorage()
+    first = {
+        "hypothesis_id": "HYP-001-intraday-fail-demo",
+        "data": {"source": "fixture", "path": "fixtures/first.csv"},
+    }
+    second = {
+        "hypothesis_id": "HYP-001-intraday-fail-demo",
+        "data": {"source": "fixture", "path": "fixtures/second.csv"},
+    }
+
+    assert storage.hash_artifact(first) != storage.hash_artifact(second)
+
+
+def test_artifact_hash_excludes_runtime_paths_without_dropping_stable_paths() -> None:
+    storage = ArtifactStorage()
+    first = {
+        "data": {"path": "fixtures/trades.csv"},
+        "output_path": "/tmp/run-a/results.json",
+        "log_file": "/tmp/run-a/log.jsonl",
+    }
+    second = {
+        "data": {"path": "fixtures/trades.csv"},
+        "output_path": "/tmp/run-b/results.json",
+        "log_file": "/tmp/run-b/log.jsonl",
+    }
+
+    assert storage.hash_artifact(first) == storage.hash_artifact(second)
+
+
 def test_storage_writes_layout_and_json(tmp_path) -> None:
     storage = ArtifactStorage(tmp_path)
 
@@ -95,8 +125,11 @@ def test_storage_writes_text_raw_json_and_hashes_files(tmp_path) -> None:
 
 def test_stable_projection_handles_paths_lists_and_self_hash_fields() -> None:
     payload = {
-        "path": Path("/tmp/runtime-only"),
+        "data": {"path": Path("fixtures/trades.csv")},
         "items": [{"result_hash": "sha256:" + "0" * 64, "value": 1}],
     }
 
-    assert stable_projection(payload) == {"items": [{"value": 1}]}
+    assert stable_projection(payload) == {
+        "data": {"path": "fixtures/trades.csv"},
+        "items": [{"value": 1}],
+    }

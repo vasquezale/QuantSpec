@@ -71,7 +71,7 @@ def test_compute_period_metrics_handles_empty_and_constant_positive_returns() ->
 
     assert empty_metrics.n_trades == 0
     assert math.isinf(constant_metrics.sharpe)
-    assert math.isinf(constant_metrics.profit_factor)
+    assert constant_metrics.profit_factor is None
 
 
 def test_oos_degradation_handles_zero_or_invalid_is_sharpe() -> None:

@@ -76,9 +76,11 @@ def compute_period_metrics(trades: pd.DataFrame) -> PeriodMetrics:
     wins = pnl > 0
     gross_profit = float(pnl[pnl > 0].sum())
     gross_loss = float(abs(pnl[pnl < 0].sum()))
-    profit_factor = math.inf if gross_loss == 0 and gross_profit > 0 else 0.0
+    profit_factor = None
     if gross_loss > 0:
         profit_factor = gross_profit / gross_loss
+    elif gross_profit == 0:
+        profit_factor = 0.0
 
     return PeriodMetrics(
         sharpe=_trade_sharpe(pnl),

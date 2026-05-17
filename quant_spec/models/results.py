@@ -36,7 +36,7 @@ class PeriodMetrics(BaseModel):
     sharpe: float
     win_rate: float = Field(ge=0, le=1)
     max_drawdown: float = Field(ge=0)
-    profit_factor: float = Field(ge=0)
+    profit_factor: float | None = Field(default=None, ge=0)
     n_trades: int = Field(ge=0)
     avg_trade_r: float
 
