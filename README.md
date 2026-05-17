@@ -6,7 +6,7 @@ It is not a trading bot. It does not execute live trades or broker orders. The p
 
 ## Setup
 
-QuantSpec is in early active development. The current release provides project packaging, development checks, artifact contracts, deterministic validation metrics, fixed quality gates, synthetic demo fixtures, and a minimal command-line entry point.
+The current release provides a runnable offline vertical slice: artifact contracts, deterministic validation metrics, fixed quality gates, synthetic demo fixtures, fixture LLM responses, a deterministic demo engine, and CLI commands that produce auditable hypothesis artifacts without an API key.
 
 Requirements:
 
@@ -27,6 +27,15 @@ The package exposes a command-line entry point so installation can be validated:
 ```bash
 uv run quantspec --version
 ```
+
+Run the offline demos:
+
+```bash
+uv run quantspec run examples/HYP-001-intraday-fail-demo.yaml --llm-mode fixture
+uv run quantspec run examples/HYP-002-intraday-pass-demo.yaml --llm-mode fixture
+```
+
+The first demo closes by gate outcome and exits with code `2`. The second demo exits with code `0` and produces a candidate review decision.
 
 ## Architecture Pipeline
 
@@ -83,10 +92,15 @@ flowchart LR
 5. Generate an executive report from verified artifacts.
 6. Produce a decision document: `CANDIDATE_FOR_REVIEW` or `CLOSED_BY_GATE`.
 
-## Current Status
+## Offline Demo Outputs
 
-The current release includes package metadata, development tooling, an environment template, git hygiene, smoke tests, Pydantic artifact contracts, JSON Schemas, canonical JSON hashing, deterministic fixture metrics, fixed quality gates, and synthetic PASS/FAIL demo fixtures.
+Each run writes artifacts to `hypotheses/<hypothesis-id>/`:
 
-Implementation is still pending for the executable MVP runner, functional pipeline CLI commands, fixture LLM responses, `python_demo_engine` orchestration, report generation, decision document generation, and live Claude integration.
+- `brief.yaml`
+- `spec.md`
+- `results.json`
+- `gates.json`
+- `report.md`
+- `decision.md`
 
-The intended public MVP will be runnable without an API key through fixture mode. Live Claude mode is planned as an opt-in integration.
+Fixture mode is the default verification path and does not require external services. Live LLM integration is intentionally unavailable in this release.
