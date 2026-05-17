@@ -1,5 +1,5 @@
 {
-  "text": "## Datos\n\nThe out-of-sample Sharpe is {sharpe_oos:.2f}, the out-of-sample win rate is {win_rate_oos:.2%}, and the out-of-sample max drawdown is {max_drawdown_oos:.2%}. Gate summary: {gates_summary}. First failed gate: {first_failed}.\n\n## Interpretacion\n\nThe evidence satisfies the fixed quality gates for this demo and remains bounded by the configured risk constraints.\n\n## Recomendacion\n\nMark the hypothesis as a candidate for human review. Do not treat the result as authorization for trading.\n",
+  "text": "## Datos\n\nThe out-of-sample Sharpe is {sharpe_oos:.2f}, the out-of-sample win rate is {win_rate_oos:.2%}, the out-of-sample max drawdown is {max_drawdown_oos:.2%}, and OOS degradation is {oos_degradation:.2%}. Gate summary: {gates_summary}. First failed gate: {first_failed}.\n\n## Interpretacion\n\nThe evidence satisfies the fixed quality gates for this demo and remains bounded by the configured risk constraints.\n\n## Recomendacion\n\nMark the hypothesis as a candidate for human review. Do not treat the result as authorization for trading.\n",
   "model": "fixture-llm",
   "usage": {
     "input_tokens": 0,
@@ -7,4 +7,3 @@
   },
   "latency_ms": 0
 }
-

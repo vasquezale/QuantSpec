@@ -77,6 +77,7 @@ def validate_report(
         f"{result.metrics.outsample.sharpe:.2f}",
         f"{result.metrics.outsample.win_rate:.2%}",
         f"{result.metrics.outsample.max_drawdown:.2%}",
+        f"{_oos_degradation(gates):.2%}",
         gates.first_failed or "none",
     ]
     absent = [value for value in required_values if value not in markdown]
@@ -95,11 +96,20 @@ def _render_report_body(
             sharpe_oos=result.metrics.outsample.sharpe,
             win_rate_oos=result.metrics.outsample.win_rate,
             max_drawdown_oos=result.metrics.outsample.max_drawdown,
+            oos_degradation=_oos_degradation(gates),
             first_failed=gates.first_failed or "none",
             gates_summary=gates.summary.value,
         ).strip()
         + "\n"
     )
+
+
+def _oos_degradation(gates: GateReport) -> float:
+    for gate in gates.gates:
+        if gate.id == "G5_oos_degradation" and gate.metric is not None:
+            return gate.metric
+    msg = "report is missing OOS degradation gate evidence"
+    raise ReportValidationError(msg)
 
 
 def _markdown_with_frontmatter(frontmatter: dict[str, object], body: str) -> str:
