@@ -1,0 +1,32 @@
+id: HYP-001-intraday-fail-demo
+created_at: '2020-01-01T00:00:00Z'
+author: operator
+market:
+  symbol: DEMO_INTRADAY
+  asset_class: demo
+  pip_size: 0.01
+timeframe: DEMO_M15
+central_hypothesis: >
+  A synthetic intraday breakout rule can be transformed into a spec,
+  evaluated against reproducible fixture data, and closed by fixed
+  quality gates when evidence is weak.
+risk_constraints:
+  max_daily_risk_pct: 5.0
+  risk_per_trade_pct: 0.5
+  max_trades_per_day: 1
+  must_have_stop_loss: true
+  intraday_only: true
+periods:
+  insample:
+    start: 2020-01-01
+    end: 2020-12-31
+  outsample:
+    start: 2021-01-01
+    end: 2021-12-31
+data:
+  source: fixture
+  path: quant_spec/data/fixtures/HYP-001-intraday-fail-demo/trades.csv
+notes: >
+  Synthetic demo data only. This example is designed to fail a gate and
+  demonstrate a closed decision outcome.
+
