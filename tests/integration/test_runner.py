@@ -1,8 +1,16 @@
 from pathlib import Path
 
+import pytest
+
 from quant_spec.io.storage import ArtifactStorage
 from quant_spec.models.decision import DecisionStatus
-from quant_spec.pipeline.runner import run_pipeline
+from quant_spec.pipeline.runner import (
+    MissingArtifactError,
+    run_pipeline,
+    stage_backtest,
+    stage_decision,
+    stage_validate_brief,
+)
 
 
 def test_runner_produces_fail_demo_artifacts(tmp_path) -> None:
@@ -34,3 +42,25 @@ def test_runner_produces_pass_demo_artifacts(tmp_path) -> None:
         "decision.md",
     ]:
         assert result.hypothesis_dir.joinpath(name).exists()
+
+
+def test_runner_rejects_backtest_when_spec_artifact_is_missing(tmp_path) -> None:
+    storage = ArtifactStorage(tmp_path)
+    brief = stage_validate_brief(
+        Path("examples/HYP-002-intraday-pass-demo.yaml"),
+        storage,
+    )
+
+    with pytest.raises(MissingArtifactError, match="spec.md"):
+        stage_backtest(brief, storage)
+
+
+def test_runner_rejects_decision_when_report_artifact_is_missing(tmp_path) -> None:
+    storage = ArtifactStorage(tmp_path)
+    brief = stage_validate_brief(
+        Path("examples/HYP-002-intraday-pass-demo.yaml"),
+        storage,
+    )
+
+    with pytest.raises(MissingArtifactError, match="report.md"):
+        stage_decision(brief.id, storage)
