@@ -59,38 +59,40 @@ Live mode writes raw model responses and usage metadata under `hypotheses/<hypot
 
 ```mermaid
 flowchart LR
-    idea["1. Idea<br/>Analyst writes brief"]
-    spec["2. Spec<br/>AI turns brief into rules"]
-    evidence["3. Evidence<br/>Deterministic evaluation"]
-    gates{"4. Gates<br/>Pass / fail / skip"}
-    report["5. Report<br/>AI summarizes evidence"]
-    decision["6. Decision<br/>Human reviews outcome"]
+    brief["Hypothesis Brief<br/>YAML input"]
+    spec["Spec Generation<br/>Fixture or Claude"]
+    engine["Deterministic Evaluation<br/>python_demo_engine"]
+    gates{"Quality Gates<br/>PASS / FAIL / SKIPPED"}
+    report["Auditable Report<br/>Verified evidence"]
+    decision["Human Decision<br/>Review or close"]
 
-    memory[("Persistent evidence layer<br/>artifacts, hashes, usage, metrics")]
-    guardrail["Not a trading bot<br/>No live execution"]
+    artifacts["Traceable Artifacts<br/>spec, results, gates, report, decision"]
 
-    idea --> spec --> evidence --> gates --> report --> decision
-    spec -.-> memory
-    evidence -.-> memory
-    gates -.-> memory
-    report -.-> memory
-    decision -.-> memory
-    guardrail -.-> decision
+    brief --> spec --> engine --> gates --> report --> decision
+    spec --> artifacts
+    engine --> artifacts
+    gates --> artifacts
+    report --> artifacts
+    decision --> artifacts
 
     classDef human fill:#f3f4f6,stroke:#64748b,color:#0f172a;
     classDef ai fill:#dbeafe,stroke:#2563eb,color:#0f172a;
     classDef evidence fill:#dcfce7,stroke:#16a34a,color:#0f172a;
     classDef gate fill:#fef3c7,stroke:#d97706,color:#0f172a;
     classDef memory fill:#f8fafc,stroke:#94a3b8,color:#0f172a;
-    classDef warning fill:#fee2e2,stroke:#dc2626,color:#0f172a;
 
-    class idea,decision human;
+    class brief,decision human;
     class spec,report ai;
-    class evidence evidence;
+    class engine evidence;
     class gates gate;
-    class memory memory;
-    class guardrail warning;
+    class artifacts memory;
 ```
+
+Read the pipeline from left to right:
+
+1. A human writes a YAML hypothesis brief.
+2. QuantSpec generates a structured specification, runs deterministic evaluation, applies fixed quality gates, and writes traceable artifacts.
+3. The final output is a documented human decision, not an automated trading action.
 
 ## What This Demonstrates
 
