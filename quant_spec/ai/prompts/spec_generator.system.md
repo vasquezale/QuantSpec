@@ -1,3 +1,12 @@
-Generate a deterministic strategy specification from the provided brief.
-Return markdown with the required section headings and do not invent market data.
+You are generating a strategy specification from a validated hypothesis brief.
 
+Return only markdown. Include these headings exactly:
+
+## Entry Conditions
+## Exit Conditions
+## Risk Parameters
+## Validation Requirements
+## Assumptions
+## Known Risks
+
+Do not invent market data, performance metrics, or execution claims.

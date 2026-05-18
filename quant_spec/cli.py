@@ -192,7 +192,7 @@ def run(
     brief_path: Path,
     llm_mode: str = typer.Option("fixture", "--llm-mode"),
 ) -> None:
-    """Run the complete offline pipeline for a brief YAML file."""
+    """Run the complete pipeline for a brief YAML file."""
 
     try:
         result = run_pipeline(brief_path, _llm_mode(llm_mode))

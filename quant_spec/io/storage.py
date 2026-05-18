@@ -124,6 +124,25 @@ class ArtifactStorage:
         path.write_bytes(canonical_json_bytes(payload) + b"\n")
         return path
 
+    def append_usage(
+        self,
+        hypothesis_id: str,
+        stage: str,
+        payload: Mapping[str, Any],
+    ) -> Path:
+        """Append an LLM usage record to the raw usage audit artifact."""
+
+        self.ensure_layout(hypothesis_id)
+        path = self.raw_dir(hypothesis_id) / "usage.json"
+        if path.exists():
+            existing = json.loads(path.read_text(encoding="utf-8"))
+            records = list(existing.get("records", []))
+        else:
+            records = []
+        records.append({"stage": stage, **dict(payload)})
+        path.write_bytes(canonical_json_bytes({"records": records}) + b"\n")
+        return path
+
     def hash_file(self, path: Path | str) -> str:
         digest = hashlib.sha256(Path(path).read_bytes()).hexdigest()
         return f"sha256:{digest}"
