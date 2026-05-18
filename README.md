@@ -8,6 +8,32 @@ It is not a trading bot. It does not execute live trades or broker orders. The p
 
 This repository demonstrates the validation workflow using synthetic fixtures and deterministic evaluation. It is intended to showcase reproducible software design, quality gates, traceable artifacts, and AI-assisted spec/report generation. It does not claim live trading performance or market edge.
 
+
+
+## Project Context And Scale
+
+QuantSpec was built as a personal project to explore a practical question: how can an ambiguous trading hypothesis become a structured, reviewable technical workflow without letting the LLM make hidden decisions? The project uses trading research as the domain, but the main engineering focus is workflow design: specification, deterministic validation, quality gates, reporting, and human review.
+
+The public release includes roughly 2,000 lines of application code and 1,100 lines of tests, with unit and integration coverage across models, storage, metrics, gates, AI fixture behavior, CLI commands, and pipeline runs. The repository is intentionally scoped around synthetic fixtures and offline demos so reviewers can inspect the workflow without credentials, secrets, broker connections, or claims of market performance.
+
+## Reviewer Quick Start
+
+QuantSpec demonstrates a simple AI-assisted validation workflow:
+
+```text
+trading idea -> structured spec -> deterministic validation -> quality gates -> report -> human review decision
+```
+
+The fastest way to review the project is to run the offline demos. They do not require API keys or external services:
+
+```bash
+uv sync
+uv run quantspec run examples/HYP-001-intraday-fail-demo.yaml --llm-mode fixture
+uv run quantspec run examples/HYP-002-intraday-pass-demo.yaml --llm-mode fixture
+```
+
+The fail demo shows how a hypothesis is closed by gate outcome. The pass demo shows how a hypothesis becomes a candidate for human review. Example artifacts are included under `docs/sample_outputs/` so reviewers can inspect the generated `spec`, `results`, `gates`, `report`, and `decision` files without running the CLI first.
+
 ## Setup
 
 The default workflow is fully reproducible: artifact contracts, deterministic validation metrics, fixed quality gates, synthetic demo fixtures, fixture LLM responses, a deterministic demo engine, and CLI commands that produce auditable hypothesis artifacts without an API key.
