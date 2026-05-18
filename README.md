@@ -4,6 +4,10 @@ QuantSpec is an AI-augmented, spec-driven validation pipeline where one analyst 
 
 It is not a trading bot. It does not execute live trades or broker orders. The project is designed to demonstrate AI-augmented development, Spec-Driven Development, quality gates, traceable artifacts, and evidence-based decision workflows.
 
+## Current Scope
+
+This repository demonstrates the validation workflow using synthetic fixtures and deterministic evaluation. It is intended to showcase reproducible software design, quality gates, traceable artifacts, and AI-assisted spec/report generation. It does not claim live trading performance or market edge.
+
 ## Setup
 
 The default workflow is fully reproducible: artifact contracts, deterministic validation metrics, fixed quality gates, synthetic demo fixtures, fixture LLM responses, a deterministic demo engine, and CLI commands that produce auditable hypothesis artifacts without an API key.
