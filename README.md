@@ -46,12 +46,13 @@ The first demo closes by gate outcome and exits with code `2`. The second demo e
 Optional live Claude mode is available for the LLM-backed `spec` and `report` stages. It is opt-in and never required for normal tests or fixture demos:
 
 ```bash
-export ANTHROPIC_API_KEY=your_api_key_here
 export QUANTSPEC_CLAUDE_MODEL=claude-sonnet-4-5-20250929
 
 uv run quantspec spec HYP-001-intraday-fail-demo --llm-mode live
 uv run quantspec report HYP-001-intraday-fail-demo --llm-mode live
 ```
+
+Set `ANTHROPIC_API_KEY` locally before running live mode. Fixture mode does not need credentials.
 
 Live mode writes raw model responses and usage metadata under `hypotheses/<hypothesis-id>/_raw/`, including `spec_response.json`, `report_response.json`, and `usage.json`. Do not commit generated artifacts or secrets.
 
