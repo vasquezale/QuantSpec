@@ -22,6 +22,12 @@ uv run ruff check .
 uv run ruff format --check .
 ```
 
+Run the test suite with coverage:
+
+```bash
+uv run pytest --cov=quant_spec --cov-report=term-missing
+```
+
 The package exposes a command-line entry point so installation can be validated:
 
 ```bash
@@ -96,6 +102,16 @@ flowchart LR
 - Traceability: each run produces auditable artifacts from `spec.md` through `decision.md`.
 - Evidence discipline: productivity metrics are shown only after measured runs exist.
 
+## How AI Was Used
+
+QuantSpec uses LLMs as bounded artifact generators, not as hidden decision makers.
+
+- Fixture mode loads versioned local LLM responses so the demo is reproducible without credentials.
+- Live mode can call Claude for `spec.md` and `report.md` only when explicitly selected.
+- Generated reports are validated against deterministic JSON artifacts before being accepted.
+- Quality gates and final decision states are computed by code, not by the LLM.
+- Raw responses, usage metadata, model names, prompt hashes, and latency are persisted for auditability.
+
 ## MVP Pipeline
 
 1. Write a `Hypothesis Brief` in YAML.
@@ -117,3 +133,14 @@ Each run writes artifacts to `hypotheses/<hypothesis-id>/`:
 - `decision.md`
 
 Fixture mode is the default verification path and does not require external services. Live mode is available only when selected with `--llm-mode live` and configured with `ANTHROPIC_API_KEY`.
+
+## Security And Repository Hygiene
+
+- Do not commit `.env`, API keys, generated `hypotheses/` artifacts, or local workspace notes.
+- The public demo uses synthetic fixtures; it is not evidence of market edge.
+- Live Claude mode is optional and should be run only with local environment variables.
+- CI runs tests, linting, and formatting checks on supported branches and pull requests.
+
+## License
+
+MIT License. See [LICENSE](LICENSE).
